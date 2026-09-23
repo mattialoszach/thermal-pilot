@@ -29,6 +29,20 @@ def _style_time_axis(axes: list[plt.Axes]) -> None:
         axis.spines[["top", "right"]].set_visible(False)
 
 
+def _place_legend_above(axis: plt.Axes, ncol: int) -> None:
+    """Keep a compact legend above the axes so it cannot cover the data."""
+
+    axis.legend(
+        ncol=ncol,
+        loc="lower right",
+        bbox_to_anchor=(1.0, 1.01),
+        borderaxespad=0.0,
+        columnspacing=1.2,
+        handlelength=1.8,
+        frameon=False,
+    )
+
+
 def plot_timeseries(
     result: SimulationResult,
     output: str | Path | None = None,
@@ -82,7 +96,7 @@ def plot_timeseries(
             label="MPC predicted air",
         )
     ax_t.set_ylabel("Temperature [°C]")
-    ax_t.legend(ncol=3, loc="upper right", frameon=False)
+    _place_legend_above(ax_t, ncol=3)
     ax_t.set_title(f"ThermalPilot — {result.controller_name}", loc="left", weight="bold")
 
     ax_u.fill_between(index, 0, frame["P_heat_w"] / 1000.0, color="#e6550d", alpha=0.72)
@@ -139,7 +153,7 @@ def plot_controller_comparison(
     ax_c.set_xlabel("Time")
     ax_u.set_ylim(bottom=0)
     ax_c.set_ylim(bottom=0)
-    ax_t.legend(ncol=2, frameon=False, loc="upper right")
+    _place_legend_above(ax_t, ncol=4)
     ax_t.set_title("Controller comparison", loc="left", weight="bold")
     _style_time_axis(list(axes))
     if output is not None:
@@ -250,8 +264,14 @@ def write_plotly_dashboard(results: list[SimulationResult], output: str | Path) 
         template="plotly_white",
         height=900,
         hovermode="x unified",
-        legend={"orientation": "h", "y": 1.04},
-        margin={"l": 75, "r": 30, "t": 100, "b": 50},
+        legend={
+            "orientation": "h",
+            "x": 1.0,
+            "xanchor": "right",
+            "y": 1.04,
+            "yanchor": "bottom",
+        },
+        margin={"l": 75, "r": 30, "t": 135, "b": 50},
     )
     path = Path(output)
     path.parent.mkdir(parents=True, exist_ok=True)

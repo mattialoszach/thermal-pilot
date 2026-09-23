@@ -55,7 +55,18 @@ def _interactive_figure(results):
         )
     fig.update_yaxes(title="Temperature [°C]", row=1, col=1)
     fig.update_yaxes(title="Heating [kW]", row=2, col=1)
-    fig.update_layout(height=700, hovermode="x unified", legend={"orientation": "h"})
+    fig.update_layout(
+        height=700,
+        hovermode="x unified",
+        legend={
+            "orientation": "h",
+            "x": 1.0,
+            "xanchor": "right",
+            "y": 1.03,
+            "yanchor": "bottom",
+        },
+        margin={"t": 80},
+    )
     return fig
 
 
