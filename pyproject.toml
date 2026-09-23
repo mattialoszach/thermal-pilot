@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "thermalpilot"
+version = "0.1.0"
+description = "Educational model-predictive climate control for a synthetic Zurich apartment"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "ThermalPilot contributors" }]
+dependencies = [
+  "cvxpy>=1.4",
+  "matplotlib>=3.8",
+  "numpy>=1.26",
+  "osqp>=0.6.5",
+  "pandas>=2.1",
+  "plotly>=5.18",
+  "scipy>=1.11",
+]
+
+[project.optional-dependencies]
+dashboard = ["streamlit>=1.31"]
+animation = ["pillow>=10.0", "imageio-ffmpeg>=0.4.9"]
+
+[dependency-groups]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.6"]
+
+[project.scripts]
+thermalpilot = "thermalpilot.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/thermalpilot"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.uv]
+default-groups = ["dev"]
